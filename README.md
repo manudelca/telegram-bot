@@ -1,6 +1,8 @@
 Telegram Bot Example
 ====================
 
+[![pipeline status](https://gitlab.com/fiuba-memo2/tp2/volantis-bot/badges/master/pipeline.svg)](https://gitlab.com/fiuba-memo2/tp2/volantis-bot/commits/master)
+
 1. Registrar un nuevo bot con el BotFather de Telegram
 
 * En Telegram https://web.telegram.org/#/im?p=@BotFather
