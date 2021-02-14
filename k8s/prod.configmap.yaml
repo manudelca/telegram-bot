@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: botconfig
 data:
-  API_URL: ""
+  API_URL: "webapi-volantis.herokuapp.com"
   LOG_LEVEL: "1"
   SUMO_SOURCES_JSON: "/config/sumo-sources.json"
   sumo-sources.json: |
