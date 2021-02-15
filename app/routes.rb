@@ -2,8 +2,21 @@ require "#{File.dirname(__FILE__)}/../lib/routing"
 require "#{File.dirname(__FILE__)}/../lib/version"
 require "#{File.dirname(__FILE__)}/tv/series"
 
+require 'webmock'
+# include WebMock::API
+
 class Routes
   include Routing
+
+  on_message '/register' do |bot, message|
+    WebMock.allow_net_connect!
+    api_url = 'http://localhost:3000'
+
+    response = Faraday.post("#{api_url}/register", { email: 'test1@test.com' }.to_json, 'Content-Type' => 'application/json')
+
+    parsed_response = JSON.parse(response.body)
+    bot.api.send_message(chat_id: message.chat.id, text: parsed_response['message'])
+  end
 
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}")
