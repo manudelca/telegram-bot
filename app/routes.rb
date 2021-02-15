@@ -3,13 +3,13 @@ require "#{File.dirname(__FILE__)}/../lib/version"
 require "#{File.dirname(__FILE__)}/tv/series"
 
 require 'webmock'
-# include WebMock::API
 
 class Routes
   include Routing
 
-  on_message '/register' do |bot, message|
+  on_message_pattern %r{\/register (?<text>.*)} do |bot, message, _args|
     WebMock.allow_net_connect!
+    # api_url = ENV['API_URL'] || 'http://localhost:3000'
     api_url = 'http://localhost:3000'
 
     response = Faraday.post("#{api_url}/register", { email: 'test1@test.com' }.to_json, 'Content-Type' => 'application/json')

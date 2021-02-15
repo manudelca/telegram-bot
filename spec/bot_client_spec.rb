@@ -156,7 +156,7 @@ describe 'BotClient' do
   xit 'should get a /register message and respond with Bienvenido! :)' do
     token = 'fake_token'
 
-    stub_get_updates(token, '/register')
+    stub_get_updates(token, '/register test@test.com')
     stub_send_message(token, 'Bienvenido! :)')
 
     app = BotClient.new(token)
