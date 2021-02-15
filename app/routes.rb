@@ -9,8 +9,7 @@ class Routes
 
   on_message_pattern %r{\/register (?<text>.*)} do |bot, message, _args|
     WebMock.allow_net_connect!
-    # api_url = ENV['API_URL'] || 'http://localhost:3000'
-    api_url = 'http://localhost:3000'
+    api_url = ENV['API_URL']
 
     response = Faraday.post("#{api_url}/register", { email: 'test1@test.com' }.to_json, 'Content-Type' => 'application/json')
 
