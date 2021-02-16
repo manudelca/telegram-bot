@@ -7,16 +7,18 @@ require 'webmock'
 class Routes
   include Routing
 
-  on_message_pattern %r{\/register (?<text>.*)} do |bot, message, _args|
-    parsed_response = JSON.parse(response.body)
-    bot.api.send_message(chat_id: message.chat.id, text: parsed_response['message'])
+  on_message_pattern %r{\/register (?<email>.*)} do |bot, message, api_communicator, args|
+    username = message.from.username
+    response = api_communicator.register(args['email'], username)
+    reg_message = Parser.new.parse(response)
+    bot.api.send_message(chat_id: message.chat.id, text: reg_message)
   end
 
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}")
   end
 
-  on_message_pattern %r{/say_hi (?<name>.*)} do |bot, message, args|
+  on_message_pattern %r{/say_hi (?<name>.*)} do |bot, message, _api_communicator, args|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{args['name']}")
   end
 

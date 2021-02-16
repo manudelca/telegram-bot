@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'web_mock'
 # Uncomment to use VCR
 # require 'vcr_helper'
+require 'byebug'
 
 require "#{File.dirname(__FILE__)}/../app/bot_client"
 
@@ -76,90 +77,77 @@ def stub_send_keyboard_message(token, message_text)
 end
 
 describe 'BotClient' do
-  it 'should get a /version message and respond with current version' do
-    token = 'fake_token'
+  let(:token) { 'fake_token' }
+  let(:api_communicator) { instance_double('ApiCommunicator') }
 
+  it 'should get a /version message and respond with current version' do
     stub_get_updates(token, '/version')
     stub_send_message(token, Version.current)
 
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
 
   it 'should get a /say_hi message and respond with Hola Emilio' do
-    token = 'fake_token'
-
     stub_get_updates(token, '/say_hi Emilio')
     stub_send_message(token, 'Hola, Emilio')
 
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
 
   it 'should get a /start message and respond with Hola' do
-    token = 'fake_token'
-
     stub_get_updates(token, '/start')
     stub_send_message(token, 'Hola, Emilio')
 
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
 
   it 'should get a /stop message and respond with Chau' do
-    token = 'fake_token'
-
     stub_get_updates(token, '/stop')
     stub_send_message(token, 'Chau, egutter')
 
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
 
   it 'should get a /tv message and respond with an inline keyboard' do
-    token = 'fake_token'
-
     stub_get_updates(token, '/tv')
     stub_send_keyboard_message(token, 'Quien se queda con el trono?')
 
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
 
   it 'should get a "Quien se queda con el trono?" message and respond with' do
-    token = 'fake_token'
-
     stub_get_inline_keyboard_updates(token, 'Quien se queda con el trono?', 2)
     stub_send_message(token, 'A mi también me encantan los dragones!')
 
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
 
   it 'should get an unknown message message and respond with Do not understand' do
-    token = 'fake_token'
-
     stub_get_updates(token, '/unknown')
     stub_send_message(token, 'Uh? No te entiendo! Me repetis la pregunta?')
 
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
 
-  xit 'should get a /register message and respond with Bienvenido! :)' do
-    token = 'fake_token'
-
+  it 'should get a /register test@test.com message and respond with Bienvenido! :)' do
+    expect(api_communicator).to receive(:register).and_return({ message: 'Bienvenido! :)' }.to_json)
     stub_get_updates(token, '/register test@test.com')
     stub_send_message(token, 'Bienvenido! :)')
-
-    app = BotClient.new(token)
+    app = BotClient.new(api_communicator, token)
 
     app.run_once
   end
