@@ -26,6 +26,10 @@ class Routes
     end
   end
 
+  on_message '/detalles' do |bot, message|
+    bot.api.send_message(chat_id: message.chat.id, text: 'Error: comando invalido. Quizas quisiste decir: /detalles {id} ?')
+  end
+
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}")
   end
