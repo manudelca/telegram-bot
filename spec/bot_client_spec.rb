@@ -76,6 +76,21 @@ def stub_send_keyboard_message(token, message_text)
     .to_return(status: 200, body: body.to_json, headers: {})
 end
 
+def stub_register
+  body = { "message": 'Bienvenido! :)' }
+  stub_request(:post, 'http://fakeurl.com/register')
+    .with(
+      body: { 'email' => 'test@test.com',
+              'username' => 'egutter' },
+      headers: {
+        'Accept' => '*/*',
+        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Content-Type' => 'application/json',
+        'User-Agent' => 'Faraday v0.15.4'
+      }
+    ).to_return(status: 201, body: body.to_json, headers: {})
+end
+
 describe 'BotClient' do
   let(:token) { 'fake_token' }
   let(:api_communicator) { instance_double('ApiCommunicator') }
@@ -144,10 +159,10 @@ describe 'BotClient' do
   end
 
   it 'should get a /register test@test.com message and respond with Bienvenido! :)' do
-    expect(api_communicator).to receive(:register).and_return({ message: 'Bienvenido! :)' }.to_json)
     stub_get_updates(token, '/register test@test.com')
+    stub_register
     stub_send_message(token, 'Bienvenido! :)')
-    app = BotClient.new(api_communicator, token)
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once
   end

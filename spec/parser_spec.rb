@@ -9,6 +9,6 @@ describe 'Parser' do
     message = 'Success'
     response = { message: message }.to_json
     r = parser.parse(response)
-    expect(r).to eq message
+    expect(r['message']).to eq message
   end
 end

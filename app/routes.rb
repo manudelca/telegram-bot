@@ -9,20 +9,20 @@ class Routes
   include Routing
 
   on_message_pattern %r{\/register (?<email>.*)} do |bot, message, api_communicator, args|
-    Thread.new {
+    Thread.new do
       username = message.from.username
       response = api_communicator.register(args['email'], username)
       reg_message = Parser.new.parse(response.body)['message']
       bot.api.send_message(chat_id: message.chat.id, text: reg_message)
-    }
+    end
   end
 
   on_message_pattern %r{\/detalles (?<content_id>.*)} do |bot, message, api_communicator, args|
-    Thread.new {
+    Thread.new do
       response = api_communicator.get_movie_details(args['content_id'])
       reg_message = Parser.new.parse(response.body)['message']
       bot.api.send_message(chat_id: message.chat.id, text: reg_message)
-    }
+    end
   end
 
   on_message '/start' do |bot, message|
