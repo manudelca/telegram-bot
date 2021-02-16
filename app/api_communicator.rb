@@ -4,7 +4,7 @@ class ApiCommunicator
     @header = { 'Content-Type' => 'application/json' }
   end
 
-  def register(_email, _username)
-    Faraday.post("#{@api_url}/register", { email: 'test@test.com', username: 'test95' }.to_json, @header)
+  def register(email, username)
+    Faraday.post("#{@api_url}/register", { email: email, username: username }.to_json, @header)
   end
 end
