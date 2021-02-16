@@ -1,5 +1,5 @@
 class Parser
   def parse(message)
-    JSON.parse(message)['message']
+    JSON.parse(message)
   end
 end
