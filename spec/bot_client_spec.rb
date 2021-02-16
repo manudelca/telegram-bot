@@ -91,6 +91,33 @@ def stub_register
     ).to_return(status: 201, body: body.to_json, headers: {})
 end
 
+def stub_get_content_with_id_one
+  body = {
+    "message": 'El contenido fue encontrado!',
+    "content": {
+      "id": 1,
+      "name": 'La pistola Desnuda',
+      "audience": 'ATP',
+      "duration_minutes": 210,
+      "genre": 'comedy',
+      "country": 'USA',
+      "director": 'David Zucker',
+      "first_actor": 'Leslie Nielsen',
+      "second_actor": 'Ricardo Montalban'
+    }
+  }
+
+  stub_request(:get, 'http://fakeurl.com/content/1')
+    .with(
+      headers: {
+        'Accept' => '*/*',
+        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Content-Type' => 'application/json',
+        'User-Agent' => 'Faraday v0.15.4'
+      }
+    ).to_return(status: 200, body: body.to_json, headers: {})
+end
+
 describe 'BotClient' do
   let(:token) { 'fake_token' }
   let(:api_communicator) { instance_double('ApiCommunicator') }
@@ -162,6 +189,24 @@ describe 'BotClient' do
     stub_get_updates(token, '/register test@test.com')
     stub_register
     stub_send_message(token, 'Bienvenido! :)')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
+
+  it 'should get a /detalles message and respond with Error: comando invalido. Quizas quisiste decir: /detalles {id} ?' do
+    stub_get_updates(token, '/detalles')
+    stub_send_message(token, 'Error: comando invalido. Quizas quisiste decir: /detalles {id} ?')
+
+    app = BotClient.new(api_communicator, token)
+
+    app.run_once
+  end
+
+  it 'should get a /detalles 1 message and respond with the movie details' do
+    stub_get_updates(token, '/detalles 1')
+    stub_get_content_with_id_one
+    stub_send_message(token, 'La pistola Desnuda, ATP, 195 minutes, comedy, USA, David Zucker, Leslie Nielsen, Ricardo Montalban')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once
