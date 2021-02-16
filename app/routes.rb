@@ -5,25 +5,22 @@ require "#{File.dirname(__FILE__)}/parser"
 require "#{File.dirname(__FILE__)}/helpers/content_helper"
 
 require 'webmock'
+require 'byebug'
 
 class Routes
   include Routing
 
   on_message_pattern %r{\/register (?<email>.*)} do |bot, message, api_communicator, args|
-    Thread.new do
-      username = message.from.username
-      response = api_communicator.register(args['email'], username)
-      reg_message = Parser.new.parse(response.body)['message']
-      bot.api.send_message(chat_id: message.chat.id, text: reg_message)
-    end
+    username = message.from.username
+    response = api_communicator.register(args['email'], username)
+    reg_message = Parser.new.parse(response.body)['message']
+    bot.api.send_message(chat_id: message.chat.id, text: reg_message)
   end
 
   on_message_pattern %r{\/detalles (?<content_id>.*)} do |bot, message, api_communicator, args|
-    Thread.new do
-      response = api_communicator.get_movie_details(args['content_id'])
-      response_body = Parser.new.parse(response.body)
-      bot.api.send_message(chat_id: message.chat.id, text: movie_details_formatted(response_body['content']))
-    end
+    response = api_communicator.get_movie_details(args['content_id'])
+    response_body = Parser.new.parse(response.body)
+    bot.api.send_message(chat_id: message.chat.id, text: movie_details_formatted(response_body['content']))
   end
 
   on_message '/detalles' do |bot, message|

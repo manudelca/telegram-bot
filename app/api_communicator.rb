@@ -11,4 +11,8 @@ class ApiCommunicator
   def get_movie_details(content_id)
     Faraday.get("#{@api_url}/content/#{content_id}")
   end
+
+  def like(content_id, username)
+    Faraday.post("#{@api_url}/like", { content_id: content_id, username: username }.to_json, @header)
+  end
 end

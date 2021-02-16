@@ -55,9 +55,12 @@ def stub_send_message(token, message_text)
 
   stub_request(:post, "https://api.telegram.org/bot#{token}/sendMessage")
     .with(
-      body: { 'chat_id' => '141733544', 'text' => message_text }
-    )
-    .to_return(status: 200, body: body.to_json, headers: {})
+      body: { 'chat_id' => '141733544', 'text' => message_text },
+      headers: { 'Accept' => '*/*',
+                 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                 'Content-Type' => 'application/x-www-form-urlencoded',
+                 'User-Agent' => 'Faraday v0.15.4' }
+    ).to_return(status: 200, body: body.to_json, headers: {})
 end
 
 def stub_send_keyboard_message(token, message_text)
@@ -88,33 +91,25 @@ def stub_register
         'Content-Type' => 'application/json',
         'User-Agent' => 'Faraday v0.15.4'
       }
-    ).to_return(status: 201, body: body.to_json, headers: {})
+    ).to_return(status: 200, body: body.to_json, headers: {})
 end
 
 def stub_get_content_with_id_one
-  body = {
-    "message": 'El contenido fue encontrado!',
-    "content": {
-      "id": 1,
-      "name": 'La pistola Desnuda',
-      "audience": 'ATP',
-      "duration_minutes": 210,
-      "genre": 'comedy',
-      "country": 'USA',
-      "director": 'David Zucker',
-      "first_actor": 'Leslie Nielsen',
-      "second_actor": 'Ricardo Montalban'
-    }
-  }
-
+  body = { "message": 'El contenido fue encontrado!',
+           "content": { "id": 1,
+                        "name": 'La pistola Desnuda',
+                        "audience": 'ATP',
+                        "duration_minutes": 210,
+                        "genre": 'comedy',
+                        "country": 'USA',
+                        "director": 'David Zucker',
+                        "first_actor": 'Leslie Nielsen',
+                        "second_actor": 'Ricardo Montalban' } }
   stub_request(:get, 'http://fakeurl.com/content/1')
     .with(
-      headers: {
-        'Accept' => '*/*',
-        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-        'Content-Type' => 'application/json',
-        'User-Agent' => 'Faraday v0.15.4'
-      }
+      headers: { 'Accept' => '*/*',
+                 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                 'User-Agent' => 'Faraday v0.15.4' }
     ).to_return(status: 200, body: body.to_json, headers: {})
 end
 
@@ -206,7 +201,7 @@ describe 'BotClient' do
   it 'should get a /detalles 1 message and respond with the movie details' do
     stub_get_updates(token, '/detalles 1')
     stub_get_content_with_id_one
-    stub_send_message(token, 'La pistola Desnuda, ATP, 195 minutes, comedy, USA, David Zucker, Leslie Nielsen, Ricardo Montalban')
+    stub_send_message(token, 'La pistola Desnuda, ATP, 210 minutes, comedy, USA, David Zucker, Leslie Nielsen, Ricardo Montalban')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once
