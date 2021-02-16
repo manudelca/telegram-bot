@@ -8,12 +8,6 @@ class Routes
   include Routing
 
   on_message_pattern %r{\/register (?<text>.*)} do |bot, message, _args|
-    WebMock.allow_net_connect!
-    # api_url = ENV['API_URL'] || 'http://localhost:3000'
-    api_url = 'http://localhost:3000'
-
-    response = Faraday.post("#{api_url}/register", { email: 'test1@test.com' }.to_json, 'Content-Type' => 'application/json')
-
     parsed_response = JSON.parse(response.body)
     bot.api.send_message(chat_id: message.chat.id, text: parsed_response['message'])
   end
