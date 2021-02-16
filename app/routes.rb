@@ -2,6 +2,7 @@ require "#{File.dirname(__FILE__)}/../lib/routing"
 require "#{File.dirname(__FILE__)}/../lib/version"
 require "#{File.dirname(__FILE__)}/tv/series"
 require "#{File.dirname(__FILE__)}/parser"
+require "#{File.dirname(__FILE__)}/helpers/content_helper"
 
 require 'webmock'
 
@@ -20,8 +21,8 @@ class Routes
   on_message_pattern %r{\/detalles (?<content_id>.*)} do |bot, message, api_communicator, args|
     Thread.new do
       response = api_communicator.get_movie_details(args['content_id'])
-      reg_message = Parser.new.parse(response.body)['message']
-      bot.api.send_message(chat_id: message.chat.id, text: reg_message)
+      response_body = Parser.new.parse(response.body)
+      bot.api.send_message(chat_id: message.chat.id, text: movie_details_formatted(response_body['content']))
     end
   end
 
