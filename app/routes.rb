@@ -5,7 +5,6 @@ require "#{File.dirname(__FILE__)}/parser"
 require "#{File.dirname(__FILE__)}/helpers/content_helper"
 
 require 'webmock'
-require 'byebug'
 
 class Routes
   include Routing
@@ -20,7 +19,11 @@ class Routes
   on_message_pattern %r{\/detalles (?<content_id>.*)} do |bot, message, api_communicator, args|
     response = api_communicator.get_content_details(args['content_id'])
     response_body = Parser.new.parse(response.body)
-    bot.api.send_message(chat_id: message.chat.id, text: content_details_formatted(response_body['content']))
+    if response.status == 404
+      bot.api.send_message(chat_id: message.chat.id, text: response_body['message'])
+    else
+      bot.api.send_message(chat_id: message.chat.id, text: content_details_formatted(response_body['content']))
+    end
   end
 
   on_message '/detalles' do |bot, message|

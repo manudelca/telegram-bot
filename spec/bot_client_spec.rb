@@ -138,6 +138,18 @@ def stub_get_content_with_id_two
     ).to_return(status: 200, body: body.to_json, headers: {})
 end
 
+def stub_get_none_existant_content
+  body = {
+    "message": 'Error: id no se encuentra en la coleccion'
+  }
+  stub_request(:get, 'http://fakeurl.com/content/-1')
+    .with(
+      headers: { 'Accept' => '*/*',
+                 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                 'User-Agent' => 'Faraday v0.15.4' }
+    ).to_return(status: 404, body: body.to_json, headers: {})
+end
+
 describe 'BotClient' do
   let(:token) { 'fake_token' }
   let(:api_communicator) { instance_double('ApiCommunicator') }
@@ -236,6 +248,15 @@ describe 'BotClient' do
     stub_get_updates(token, '/detalles 2')
     stub_get_content_with_id_two
     stub_send_message(token, 'The Office, No ATP, 30 minutes, comedy, USA, Ricky Gervais, Steve Carrell, Rainn Wilson, seasons: 2, episodes: 9')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
+
+  it 'should get a /detalles -1 message and respond with content not found message' do
+    stub_get_updates(token, '/detalles -1')
+    stub_get_none_existant_content
+    stub_send_message(token, 'Error: id no se encuentra en la coleccion')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once
