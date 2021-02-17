@@ -10,8 +10,8 @@ class Routes
   include Routing
 
   on_message_pattern %r{\/register (?<email>.*)} do |bot, message, api_communicator, args|
-    username = message.from.username
-    response = api_communicator.register(args['email'], username)
+    user_id = message.from.id
+    response = api_communicator.register(args['email'], user_id)
     reg_message = Parser.new.parse(response.body)['message']
     bot.api.send_message(chat_id: message.chat.id, text: reg_message)
   end

@@ -84,7 +84,7 @@ def stub_register
   stub_request(:post, 'http://fakeurl.com/register')
     .with(
       body: { 'email' => 'test@test.com',
-              'username' => 'egutter' },
+              'user_id' => 141_733_544 },
       headers: {
         'Accept' => '*/*',
         'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
