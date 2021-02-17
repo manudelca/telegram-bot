@@ -30,6 +30,13 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: 'Error: comando invalido. Quizas quisiste decir: /detalles {id} ?')
   end
 
+  on_message_pattern %r{\/like (?<content_id>.*)} do |bot, message, api_communicator, args|
+    user_id = message.from.id
+    response = api_communicator.like(args['content_id'], user_id)
+    response_body = Parser.new.parse(response.body)['message']
+    bot.api.send_message(chat_id: message.chat.id, text: response_body)
+  end
+
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}")
   end

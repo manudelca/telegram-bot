@@ -12,7 +12,7 @@ class ApiCommunicator
     Faraday.get("#{@api_url}/content/#{content_id}")
   end
 
-  def like(content_id, username)
-    Faraday.post("#{@api_url}/like", { content_id: content_id, username: username }.to_json, @header)
+  def like(content_id, user_id)
+    Faraday.post("#{@api_url}/like", { content_id: content_id, telegram_user_id: user_id }.to_json, @header)
   end
 end

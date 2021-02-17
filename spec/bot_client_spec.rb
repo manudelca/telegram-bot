@@ -150,6 +150,21 @@ def stub_get_none_existant_content
     ).to_return(status: 404, body: body.to_json, headers: {})
 end
 
+def stub_like
+  body = {
+    "message": 'Calificación registrada'
+  }
+  stub_request(:post, 'http://fakeurl.com/like')
+    .with(
+      body: { 'content_id' => '1',
+              'telegram_user_id' => 141_733_544 },
+      headers: { 'Accept' => '*/*',
+                 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                 'Content-Type' => 'application/json',
+                 'User-Agent' => 'Faraday v0.15.4' }
+    ).to_return(status: 200, body: body.to_json, headers: {})
+end
+
 describe 'BotClient' do
   let(:token) { 'fake_token' }
   let(:api_communicator) { instance_double('ApiCommunicator') }
@@ -257,6 +272,15 @@ describe 'BotClient' do
     stub_get_updates(token, '/detalles -1')
     stub_get_none_existant_content
     stub_send_message(token, 'Error: id no se encuentra en la coleccion')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
+
+  it 'should get a /like 1 message and respond with Calificación registrada' do
+    stub_get_updates(token, '/like 1')
+    stub_like
+    stub_send_message(token, 'Calificación registrada')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once
