@@ -8,7 +8,7 @@ class ApiCommunicator
     Faraday.post("#{@api_url}/register", { email: email, username: username }.to_json, @header)
   end
 
-  def get_movie_details(content_id)
+  def get_content_details(content_id)
     Faraday.get("#{@api_url}/content/#{content_id}")
   end
 

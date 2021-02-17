@@ -113,6 +113,31 @@ def stub_get_content_with_id_one
     ).to_return(status: 200, body: body.to_json, headers: {})
 end
 
+def stub_get_content_with_id_two
+  body = {
+    "message": 'El contenido fue encontrado!',
+    "content": {
+      "id": 2,
+      "name": 'The Office',
+      "audience": 'No ATP',
+      "duration_minutes": 30,
+      "genre": 'comedy',
+      "country": 'USA',
+      "director": 'Ricky Gervais',
+      "first_actor": 'Steve Carrell',
+      "second_actor": 'Rainn Wilson',
+      "seasons": 2,
+      "episodes": 9
+    }
+  }
+  stub_request(:get, 'http://fakeurl.com/content/2')
+    .with(
+      headers: { 'Accept' => '*/*',
+                 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                 'User-Agent' => 'Faraday v0.15.4' }
+    ).to_return(status: 200, body: body.to_json, headers: {})
+end
+
 describe 'BotClient' do
   let(:token) { 'fake_token' }
   let(:api_communicator) { instance_double('ApiCommunicator') }
@@ -202,6 +227,15 @@ describe 'BotClient' do
     stub_get_updates(token, '/detalles 1')
     stub_get_content_with_id_one
     stub_send_message(token, 'La pistola Desnuda, ATP, 210 minutes, comedy, USA, David Zucker, Leslie Nielsen, Ricardo Montalban')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
+
+  it 'should get a /detalles 2 message and respond with the tv_show details' do
+    stub_get_updates(token, '/detalles 2')
+    stub_get_content_with_id_two
+    stub_send_message(token, 'The Office, No ATP, 30 minutes, comedy, USA, Ricky Gervais, Steve Carrell, Rainn Wilson, seasons: 2, episodes: 9')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once

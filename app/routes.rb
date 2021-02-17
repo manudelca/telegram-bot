@@ -18,9 +18,9 @@ class Routes
   end
 
   on_message_pattern %r{\/detalles (?<content_id>.*)} do |bot, message, api_communicator, args|
-    response = api_communicator.get_movie_details(args['content_id'])
+    response = api_communicator.get_content_details(args['content_id'])
     response_body = Parser.new.parse(response.body)
-    bot.api.send_message(chat_id: message.chat.id, text: movie_details_formatted(response_body['content']))
+    bot.api.send_message(chat_id: message.chat.id, text: content_details_formatted(response_body['content']))
   end
 
   on_message '/detalles' do |bot, message|
