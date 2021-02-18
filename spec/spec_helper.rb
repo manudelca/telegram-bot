@@ -13,6 +13,17 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'simplecov'
+SimpleCov.start do
+  root(File.join(File.dirname(__FILE__), '..'))
+  coverage_dir 'reports/coverage'
+  add_filter '/spec/'
+  add_filter '/app/'
+  add_group 'Tv', 'app/tv'
+  add_group 'Helpers', 'app/helpers'
+  add_group 'Models', 'app'
+  add_group 'Lib', 'lib'
+end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
