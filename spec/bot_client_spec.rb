@@ -80,7 +80,6 @@ def stub_send_keyboard_message(token, message_text)
 end
 
 def stub_register(send_body, return_body)
-  body = { "message": 'Bienvenido! :)' }
   stub_request(:post, 'http://fakeurl.com/register')
     .with(
       body: send_body.to_json,
@@ -231,7 +230,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /register test@test.com message and respond with Bienvenido! :)' do
+  it 'should get a /register test@test.com message and respond with Bienvenido! :)' do # rubocop:disable RSpec/ExampleLength
     email = 'test@test.com'
     send_body = { 'email': email, 'telegram_user_id': 141_733_544 }
     return_body = { "message": 'Bienvenido! :)' }
@@ -243,7 +242,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /register message and respond with Error: falta el campo email' do
+  it 'should get a /register message and respond with Error: falta el campo email' do # rubocop:disable RSpec/ExampleLength
     send_body = { 'telegram_user_id': 141_733_544 }
     return_body = { "message": 'Error: falta el campo email' }
     stub_get_updates(token, '/register')
