@@ -79,19 +79,18 @@ def stub_send_keyboard_message(token, message_text)
     .to_return(status: 200, body: body.to_json, headers: {})
 end
 
-def stub_register
+def stub_register(send_body, return_body)
   body = { "message": 'Bienvenido! :)' }
   stub_request(:post, 'http://fakeurl.com/register')
     .with(
-      body: { 'email' => 'test@test.com',
-              'telegram_user_id' => 141_733_544 },
+      body: send_body.to_json,
       headers: {
         'Accept' => '*/*',
         'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
         'Content-Type' => 'application/json',
         'User-Agent' => 'Faraday v0.15.4'
       }
-    ).to_return(status: 200, body: body.to_json, headers: {})
+    ).to_return(status: 200, body: return_body.to_json, headers: {})
 end
 
 def stub_get_content_with_id_one
@@ -233,8 +232,11 @@ describe 'BotClient' do
   end
 
   it 'should get a /register test@test.com message and respond with Bienvenido! :)' do
-    stub_get_updates(token, '/register test@test.com')
-    stub_register
+    email = 'test@test.com'
+    send_body = { 'email': email, 'telegram_user_id': 141_733_544 }
+    return_body = { "message": 'Bienvenido! :)' }
+    stub_get_updates(token, "/register #{email}")
+    stub_register(send_body, return_body)
     stub_send_message(token, 'Bienvenido! :)')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
@@ -242,7 +244,10 @@ describe 'BotClient' do
   end
 
   it 'should get a /register message and respond with Error: falta el campo email' do
+    send_body = { 'telegram_user_id': 141_733_544 }
+    return_body = { "message": 'Error: falta el campo email' }
     stub_get_updates(token, '/register')
+    stub_register(send_body, return_body)
     stub_send_message(token, 'Error: falta el campo email')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 

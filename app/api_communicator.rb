@@ -8,6 +8,10 @@ class ApiCommunicator
     Faraday.post("#{@api_url}/register", { email: email, telegram_user_id: user_id }.to_json, @header)
   end
 
+  def register_with_no_email(user_id)
+    Faraday.post("#{@api_url}/register", { telegram_user_id: user_id }.to_json, @header)
+  end
+
   def get_content_details(content_id)
     Faraday.get("#{@api_url}/content/#{content_id}")
   end
