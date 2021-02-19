@@ -241,6 +241,14 @@ describe 'BotClient' do
     app.run_once
   end
 
+  it 'should get a /register message and respond with Error: falta el campo email' do
+    stub_get_updates(token, '/register')
+    stub_send_message(token, 'Error: falta el campo email')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
+
   it 'should get a /detalles message and respond with Error: comando invalido. Quizas quisiste decir: /detalles {id} ?' do
     stub_get_updates(token, '/detalles')
     stub_send_message(token, 'Error: comando invalido. Quizas quisiste decir: /detalles {id} ?')

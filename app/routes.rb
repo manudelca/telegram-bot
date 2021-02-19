@@ -16,6 +16,10 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: reg_message)
   end
 
+  on_message '/register' do |bot, message|
+    bot.api.send_message(chat_id: message.chat.id, text: 'Error: falta el campo email')
+  end
+
   on_message_pattern %r{\/detalles (?<content_id>.*)} do |bot, message, api_communicator, args|
     response = api_communicator.get_content_details(args['content_id'])
     response_body = Parser.new.parse(response.body)
