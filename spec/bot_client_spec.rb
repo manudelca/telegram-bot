@@ -297,4 +297,16 @@ describe 'BotClient' do
 
     app.run_once
   end
+
+  it 'should get a /register test@test.com message with repeated email and respond with Error: este email ya se encuentra registrado' do # rubocop:disable RSpec/ExampleLength
+    email = 'test@test.com'
+    send_body = { 'email': email, 'telegram_user_id': 141_733_544 }
+    return_body = { "message": 'Error: este email ya se encuentra registrado' }
+    stub_get_updates(token, "/register #{email}")
+    stub_register(send_body, return_body)
+    stub_send_message(token, 'Error: este email ya se encuentra registrado')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
 end
