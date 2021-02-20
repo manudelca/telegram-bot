@@ -309,4 +309,16 @@ describe 'BotClient' do
 
     app.run_once
   end
+
+  it 'should get a /register test@test message and respond with Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com' do # rubocop:disable RSpec/ExampleLength
+    email = 'test@test'
+    send_body = { 'email': email, 'telegram_user_id': 141_733_544 }
+    return_body = { "message": 'Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com' }
+    stub_get_updates(token, "/register #{email}")
+    stub_register(send_body, return_body)
+    stub_send_message(token, 'Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
 end
