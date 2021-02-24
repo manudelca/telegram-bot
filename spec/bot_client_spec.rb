@@ -163,6 +163,31 @@ def stub_like
     ).to_return(status: 200, body: body.to_json, headers: {})
 end
 
+def stub_seen_this_week
+  body = {
+    "message": 'Búsqueda de contenido visto esta semana exitosa',
+    "content": [
+      {
+        "id": 2,
+        "name": 'The Office',
+        "genre": 'comedy',
+        "director": 'Ricky Gervais',
+        "first_actor": 'Steve Carrell',
+        "second_actor": 'Rainn Wilson',
+        "season_number": 2
+      }
+    ]
+  }
+  stub_request(:post, 'http://fakeurl.com/seen_this_week')
+    .with(
+      body: { 'telegram_user_id' => 141_733_544 },
+      headers: { 'Accept' => '*/*',
+                 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                 'Content-Type' => 'application/json',
+                 'User-Agent' => 'Faraday v0.15.4' }
+    ).to_return(status: 200, body: body.to_json, headers: {})
+end
+
 describe 'BotClient' do
   let(:token) { 'fake_token' }
   let(:api_communicator) { instance_double('ApiCommunicator') }
@@ -317,6 +342,15 @@ describe 'BotClient' do
     stub_get_updates(token, "/register #{email}")
     stub_register(send_body, return_body)
     stub_send_message(token, 'Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com')
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
+
+  it 'should get a /seen_this_week message and respond with the contents ditails' do
+    stub_get_updates(token, '/seen_this_week')
+    stub_seen_this_week
+    stub_send_message(token, "id: 2, The Office, comedy, Ricky Gervais, Steve Carrell, Rainn Wilson, season_number: 2\n")
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once

@@ -54,6 +54,17 @@ class Routes
     end
   end
 
+  on_message '/seen_this_week' do |bot, message, api_communicator|
+    user_id = message.from.id
+    response = api_communicator.get_seen_this_week(user_id)
+    response_body = Parser.new.parse(response.body)
+    if response.status == 404
+      bot.api.send_message(chat_id: message.chat.id, text: response_body['message'])
+    else
+      bot.api.send_message(chat_id: message.chat.id, text: content_seen_details_formatted(response_body['content']))
+    end
+  end
+
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}")
   end

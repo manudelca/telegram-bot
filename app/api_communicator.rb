@@ -23,4 +23,8 @@ class ApiCommunicator
   def like(content_id, user_id)
     Faraday.post("#{@api_url}/like", { content_id: content_id, telegram_user_id: user_id }.to_json, @header)
   end
+
+  def get_seen_this_week(user_id)
+    Faraday.post("#{@api_url}/seen_this_week", { telegram_user_id: user_id }.to_json, @header)
+  end
 end
