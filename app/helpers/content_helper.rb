@@ -27,6 +27,6 @@ end
 
 def basic_details_formatted(content)
   contents_formatted = "id: #{content['id']}, #{content['name']}, #{content['genre']}, #{content['director']}, #{content['first_actor']}, #{content['second_actor']}" # rubocop:disable Metrics/LineLength
-  contents_formatted += ", season_number: #{content['season_number']}" unless content['season_number'].nil?
+  contents_formatted += ", temporada: #{content['season_number']}" unless content['season_number'].nil?
   contents_formatted
 end
