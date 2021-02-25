@@ -350,7 +350,7 @@ describe 'BotClient' do
   it 'should get a /seen_this_week message and respond with the contents ditails' do
     stub_get_updates(token, '/seen_this_week')
     stub_seen_this_week
-    stub_send_message(token, "id: 2, The Office, comedy, Ricky Gervais, Steve Carrell, Rainn Wilson, season_number: 2\n")
+    stub_send_message(token, "id: 2, The Office, comedy, Ricky Gervais, Steve Carrell, Rainn Wilson, temporada: 2\n")
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once
