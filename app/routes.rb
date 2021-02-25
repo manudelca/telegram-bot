@@ -47,7 +47,7 @@ class Routes
   on_message '/novedades' do |bot, message, api_communicator|
     response = api_communicator.releases
     response_body = Parser.new.parse(response.body)
-    if response_body['content'].empty?
+    if response.status == 404
       bot.api.send_message(chat_id: message.chat.id, text: response_body['message'])
     else
       bot.api.send_message(chat_id: message.chat.id, text: content_release_formatted(response_body['content']))
