@@ -16,6 +16,10 @@ class ApiCommunicator
     Faraday.get("#{@api_url}/content/#{content_id}")
   end
 
+  def add_to_list(user_id, content_id)
+    Faraday.patch("#{@api_url}/clients/#{user_id}/contents/#{content_id}/list")
+  end
+
   def releases
     Faraday.get("#{@api_url}/releases")
   end

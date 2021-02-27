@@ -65,6 +65,17 @@ class Routes
     end
   end
 
+  on_message_pattern %r{\/agregar_a_lista (?<content_id>.*)} do |bot, message, api_communicator, args|
+    user_id = message.from.id
+    response = api_communicator.add_to_list(user_id, args['content_id'])
+    response_body = Parser.new.parse(response.body)
+    bot.api.send_message(chat_id: message.chat.id, text: response_body['message'])
+  end
+
+  on_message '/agregar_a_lista' do |bot, message|
+    bot.api.send_message(chat_id: message.chat.id, text: 'Error: comando invalido. Quizas quisiste decir: /agregar_lista {id} ?')
+  end
+
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}")
   end

@@ -188,6 +188,16 @@ def stub_seen_this_week
     ).to_return(status: 200, body: body.to_json, headers: {})
 end
 
+def stub_add_to_list_content_with_id_one
+  body = { "message": 'Contenido agregado a la lista exitosamente' }
+  stub_request(:patch, 'http://fakeurl.com/clients/141733544/contents/1/list')
+    .with(
+      headers: { 'Accept' => '*/*',
+                 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                 'User-Agent' => 'Faraday v0.15.4' }
+    ).to_return(status: 201, body: body.to_json, headers: {})
+end
+
 describe 'BotClient' do
   let(:token) { 'fake_token' }
   let(:api_communicator) { instance_double('ApiCommunicator') }
@@ -351,6 +361,24 @@ describe 'BotClient' do
     stub_get_updates(token, '/seen_this_week')
     stub_seen_this_week
     stub_send_message(token, "id: 2, The Office, comedy, Ricky Gervais, Steve Carrell, Rainn Wilson, temporada: 2\n")
+    app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
+
+    app.run_once
+  end
+
+  it 'should get a /agregar_a_lista message and respond with Error: comando invalido. Quizas quisiste decir: /agregar_a_lista {id} ?' do
+    stub_get_updates(token, '/agregar_a_lista')
+    stub_send_message(token, 'Error: comando invalido. Quizas quisiste decir: /agregar_a_lista {id} ?')
+
+    app = BotClient.new(api_communicator, token)
+
+    app.run_once
+  end
+
+  it 'should get a /agregar_a_lista 1 message and respond with Contenido agregado a la lista exitosamente' do
+    stub_get_updates(token, '/agregar_a_lista 1')
+    stub_add_to_list_content_with_id_one
+    stub_send_message(token, 'Contenido agregado a la lista exitosamente')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
 
     app.run_once
