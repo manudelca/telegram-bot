@@ -366,15 +366,6 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /agregar_a_lista message and respond with Error: comando invalido. Quizas quisiste decir: /agregar_a_lista {id} ?' do
-    stub_get_updates(token, '/agregar_a_lista')
-    stub_send_message(token, 'Error: comando invalido. Quizas quisiste decir: /agregar_a_lista {id} ?')
-
-    app = BotClient.new(api_communicator, token)
-
-    app.run_once
-  end
-
   it 'should get a /agregar_a_lista 1 message and respond with Contenido agregado a la lista exitosamente' do
     stub_get_updates(token, '/agregar_a_lista 1')
     stub_add_to_list_content_with_id_one
