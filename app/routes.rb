@@ -65,6 +65,16 @@ class Routes
     end
   end
 
+  on_message '/sugerencias' do |bot, message, api_communicator|
+    response = api_communicator.weather_suggestions
+    response_body = Parser.new.parse(response.body)
+    if response.status == 404
+      bot.api.send_message(chat_id: message.chat.id, text: response_body['message'])
+    else
+      bot.api.send_message(chat_id: message.chat.id, text: content_release_formatted(response_body['content']))
+    end
+  end
+
   on_message_pattern %r{\/agregar_a_lista (?<content_id>.*)} do |bot, message, api_communicator, args|
     user_id = message.from.id
     response = api_communicator.add_to_list(user_id, args['content_id'])
