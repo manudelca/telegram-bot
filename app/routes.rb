@@ -6,7 +6,7 @@ require "#{File.dirname(__FILE__)}/helpers/content_helper"
 
 require 'webmock'
 
-class Routes
+class Routes # rubocop:disable Metrics/ClassLength
   include Routing
 
   on_message_pattern %r{\/register (?<email>.*)} do |bot, message, api_communicator, args|
