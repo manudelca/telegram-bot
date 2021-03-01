@@ -1,7 +1,10 @@
 class ApiCommunicator
   def initialize(api_url)
     @api_url = api_url
-    @header = { 'Content-Type' => 'application/json' }
+    @header = {
+      'Content-Type' => 'application/json',
+      'Authorization' => ENV['WEBAPI_API_KEY']
+    }
   end
 
   def register(email, user_id)
