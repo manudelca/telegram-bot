@@ -265,11 +265,11 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /register test@test.com message and respond with Bienvenido! :)' do # rubocop:disable RSpec/ExampleLength
+  it 'should get a /registro test@test.com message and respond with Bienvenido! :)' do # rubocop:disable RSpec/ExampleLength
     email = 'test@test.com'
     send_body = { 'email': email, 'telegram_user_id': 141_733_544 }
     return_body = { "message": 'Bienvenido! :)' }
-    stub_get_updates(token, "/register #{email}")
+    stub_get_updates(token, "/registro #{email}")
     stub_register(send_body, return_body)
     stub_send_message(token, 'Bienvenido! :)')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
@@ -324,8 +324,8 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /like 1 message and respond with Calificación registrada' do
-    stub_get_updates(token, '/like 1')
+  it 'should get a /me_gusta 1 message and respond with Calificación registrada' do
+    stub_get_updates(token, '/me_gusta 1')
     stub_like
     stub_send_message(token, 'Calificación registrada')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
@@ -333,11 +333,11 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /register test@test.com message with repeated email and respond with Error: este email ya se encuentra registrado' do # rubocop:disable RSpec/ExampleLength
+  it 'should get a /registro test@test.com message with repeated email and respond with Error: este email ya se encuentra registrado' do # rubocop:disable RSpec/ExampleLength
     email = 'test@test.com'
     send_body = { 'email': email, 'telegram_user_id': 141_733_544 }
     return_body = { "message": 'Error: este email ya se encuentra registrado' }
-    stub_get_updates(token, "/register #{email}")
+    stub_get_updates(token, "/registro #{email}")
     stub_register(send_body, return_body)
     stub_send_message(token, 'Error: este email ya se encuentra registrado')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
@@ -345,11 +345,11 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /register test@test message and respond with Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com' do # rubocop:disable RSpec/ExampleLength
+  it 'should get a /registro test@test message and respond with Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com' do # rubocop:disable RSpec/ExampleLength
     email = 'test@test'
     send_body = { 'email': email, 'telegram_user_id': 141_733_544 }
     return_body = { "message": 'Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com' }
-    stub_get_updates(token, "/register #{email}")
+    stub_get_updates(token, "/registro #{email}")
     stub_register(send_body, return_body)
     stub_send_message(token, 'Error: email inválido, ingrese un mail válido. Ej: mail@dominio.com')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
@@ -357,8 +357,8 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /seen_this_week message and respond with the contents ditails' do
-    stub_get_updates(token, '/seen_this_week')
+  it 'should get a /visto_esta_semana message and respond with the contents ditails' do
+    stub_get_updates(token, '/visto_esta_semana')
     stub_seen_this_week
     stub_send_message(token, "id: 2, The Office, comedy, Ricky Gervais, Steve Carrell, Rainn Wilson, temporada: 2\n")
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)
