@@ -6,7 +6,7 @@ class ApiCommunicator
   def header
     {
       'Content-Type' => 'application/json',
-      'HTTP_AUTHORIZATION' => ENV['WEBAPI_API_KEY']
+      'Authorization' => ENV['WEBAPI_API_KEY']
     }
   end
 
@@ -19,7 +19,7 @@ class ApiCommunicator
   end
 
   def get_content_details(content_id)
-    Faraday.get("#{@api_url}/content/#{content_id}", header)
+    Faraday.get("#{@api_url}/content/#{content_id}", nil, header)
   end
 
   def add_to_list(user_id, content_id)
@@ -27,7 +27,7 @@ class ApiCommunicator
   end
 
   def releases
-    Faraday.get("#{@api_url}/releases", header)
+    Faraday.get("#{@api_url}/releases", nil, header)
   end
 
   def like(content_id, user_id)
@@ -39,6 +39,6 @@ class ApiCommunicator
   end
 
   def weather_suggestions
-    Faraday.get("#{@api_url}/weather_suggestion", header)
+    Faraday.get("#{@api_url}/weather_suggestion", nil, header)
   end
 end
