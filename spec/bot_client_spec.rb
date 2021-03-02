@@ -277,10 +277,10 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /register message and respond with Error: falta el campo email' do # rubocop:disable RSpec/ExampleLength
+  it 'should get a /registro message and respond with Error: falta el campo email' do # rubocop:disable RSpec/ExampleLength
     send_body = { 'telegram_user_id': 141_733_544 }
     return_body = { "message": 'Error: falta el campo email' }
-    stub_get_updates(token, '/register')
+    stub_get_updates(token, '/registro')
     stub_register(send_body, return_body)
     stub_send_message(token, 'Error: falta el campo email')
     app = BotClient.new(ApiCommunicator.new('http://fakeurl.com'), token)

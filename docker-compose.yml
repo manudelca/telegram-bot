@@ -12,3 +12,4 @@ services:
         - .:/app
     environment:
         RACK_ENV: "development"
+        WEBAPI_API_KEY: "af5876e4-2b63-4f98-a903-807187ffe2d2"

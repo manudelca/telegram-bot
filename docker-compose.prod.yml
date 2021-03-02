@@ -17,5 +17,6 @@ services:
       SUMO_ACCESS_ID: "${SUMO_ACCESS_ID}"
       SUMO_ACCESS_KEY: "${SUMO_ACCESS_KEY}"
       SUMO_SOURCES_JSON: /data/sumo-sources.json
+      WEBAPI_API_KEY: "aaa57ad9-e930-455a-b798-7f325e1eb9a6"
     volumes:
       - .:/data
