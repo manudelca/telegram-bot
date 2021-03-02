@@ -6,7 +6,7 @@ require "#{File.dirname(__FILE__)}/helpers/content_helper"
 
 require 'webmock'
 
-class Routes
+class Routes # rubocop:disable Metrics/ClassLength
   include Routing
 
   on_message_pattern %r{\/registro (?<email>.*)} do |bot, message, api_communicator, args|
@@ -62,6 +62,16 @@ class Routes
       bot.api.send_message(chat_id: message.chat.id, text: response_body['message'])
     else
       bot.api.send_message(chat_id: message.chat.id, text: content_seen_details_formatted(response_body['content']))
+    end
+  end
+
+  on_message '/sugerencias' do |bot, message, api_communicator|
+    response = api_communicator.weather_suggestions
+    response_body = Parser.new.parse(response.body)
+    if response.status == 404
+      bot.api.send_message(chat_id: message.chat.id, text: response_body['message'])
+    else
+      bot.api.send_message(chat_id: message.chat.id, text: content_release_formatted(response_body['content']))
     end
   end
 
