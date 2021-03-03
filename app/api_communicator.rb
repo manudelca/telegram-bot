@@ -35,7 +35,7 @@ class ApiCommunicator
   end
 
   def get_seen_this_week(user_id)
-    Faraday.get("#{@api_url}/seen_this_week/#{user_id}", nil, @header)
+    Faraday.get("#{@api_url}/seen_this_week/#{user_id}", nil, header)
   end
 
   def weather_suggestions
