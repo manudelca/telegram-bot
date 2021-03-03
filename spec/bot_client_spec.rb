@@ -178,9 +178,8 @@ def stub_seen_this_week
       }
     ]
   }
-  stub_request(:post, 'http://fakeurl.com/seen_this_week')
+  stub_request(:get, 'http://fakeurl.com/seen_this_week/141733544')
     .with(
-      body: { 'telegram_user_id' => 141_733_544 },
       headers: { 'Accept' => '*/*',
                  'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
                  'Content-Type' => 'application/json',
