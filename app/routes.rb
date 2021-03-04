@@ -8,14 +8,14 @@ require 'webmock'
 class Routes
   include Routing
 
-  on_message_pattern %r{\/register (?<email>.*)} do |bot, message, api_communicator, args|
+  on_message_pattern %r{\/registro (?<email>.*)} do |bot, message, api_communicator, args|
     user_id = message.from.id
     response = api_communicator.register(args['email'], user_id)
     reg_message = Parser.new.parse(response.body)['message']
     bot.api.send_message(chat_id: message.chat.id, text: reg_message)
   end
 
-  on_message '/register' do |bot, message, api_communicator|
+  on_message '/registro' do |bot, message, api_communicator|
     user_id = message.from.id
     response = api_communicator.register_with_no_email(user_id)
     reg_message = Parser.new.parse(response.body)['message']
@@ -36,7 +36,7 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: 'Error: comando invalido. Quizas quisiste decir: /detalles {id} ?')
   end
 
-  on_message_pattern %r{\/like (?<content_id>.*)} do |bot, message, api_communicator, args|
+  on_message_pattern %r{\/me_gusta (?<content_id>.*)} do |bot, message, api_communicator, args|
     user_id = message.from.id
     response = api_communicator.like(args['content_id'], user_id)
     response_body = Parser.new.parse(response.body)['message']
@@ -53,7 +53,7 @@ class Routes
     end
   end
 
-  on_message '/seen_this_week' do |bot, message, api_communicator|
+  on_message '/visto_esta_semana' do |bot, message, api_communicator|
     user_id = message.from.id
     response = api_communicator.get_seen_this_week(user_id)
     response_body = Parser.new.parse(response.body)
