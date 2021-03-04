@@ -238,24 +238,6 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /tv message and respond with an inline keyboard' do
-    stub_get_updates(token, '/tv')
-    stub_send_keyboard_message(token, 'Quien se queda con el trono?')
-
-    app = BotClient.new(api_communicator, token)
-
-    app.run_once
-  end
-
-  it 'should get a "Quien se queda con el trono?" message and respond with' do
-    stub_get_inline_keyboard_updates(token, 'Quien se queda con el trono?', 2)
-    stub_send_message(token, 'A mi también me encantan los dragones!')
-
-    app = BotClient.new(api_communicator, token)
-
-    app.run_once
-  end
-
   it 'should get an unknown message message and respond with Do not understand' do
     stub_get_updates(token, '/unknown')
     stub_send_message(token, 'Uh? No te entiendo! Me repetis la pregunta?')
